@@ -1,4 +1,4 @@
-from func import escurtador
+from func import encurtador,viewurls
 from cabecalho import cabecalho,opcoes
 from banco_dados import db
 from time import sleep
@@ -16,8 +16,12 @@ res = int(input("Sua opcão:"))
 
 if res == 1:
     url=input("Enter the Link:")
-    escurtador(url)
-#elif res == 2:
+    encurtador(url)
+elif res == 2:
+    viewurls()
+if res == 3:
+    
+
     
     
         

@@ -12,11 +12,12 @@ def db():
         try:
             print("Banco de dados conectado com sucesso!!")
             break
-        except TypeError as e:
+        except (mysql.connector.DatabaseError) as e:
             print(f"ERRO! {e}")
-            
-            
+            break
+               
     return conexao_db
+
 
 
 
