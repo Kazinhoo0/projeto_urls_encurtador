@@ -1,4 +1,4 @@
-from func import encurtador,viewurls
+from func import encurtador,viewurls,viewurlnrm
 from cabecalho import cabecalho,opcoes
 from banco_dados import db
 from time import sleep
@@ -20,6 +20,8 @@ if res == 1:
 elif res == 2:
     viewurls()
 if res == 3:
+    viewurlnrm()
+
     
 
     

@@ -14,9 +14,10 @@ def encurtador(url):
 def createtable():
     conexao_banco,cursor = estabelecer_conexao()
     try:
-        comando = ("""CREATE TABLE urlencurtadas (
+        comando = ("""CREATE TABLE urls (
                 id auto_increment, not_null
-                url varchar(50) 
+                urlencur varchar(50)
+                urlnormal varchar(200) 
                    """)
         cursor.execute(comando)
         cursor.fetchall()
@@ -29,15 +30,14 @@ def createtable():
         conexao_banco.close()
         return print("Tabela criada com Sucesso!")
         
-    
-    
 
-def viewurls():
+
+def viewurls(comando):
     try:
         conexao_banco,cursor = estabelecer_conexao
         createtable()
 
-        comando = ("SELECT * FROM urlencurtadas")
+        comando = ("SELECT * FROM urlencur")
         cursor.execute(comando)
         resultado = cursor.fetchall()
         for i in resultado:
@@ -50,6 +50,26 @@ def viewurls():
         cursor.close()
         conexao_banco.close()
     
+
+
+def viewurlnrm(comando):
+    try:
+        conexao_banco,cursor = estabelecer_conexao
+        createtable()
+
+        comando = ("SELECT * FROM urlnormal")
+        cursor.execute(comando)
+        resultado = cursor.fetchall()
+        for i in resultado:
+                url = i
+                print(f"Os seus urls encurtados são: 
+                ulrs: {url}")
+    except (mysql.connector.Error) as e:
+        print(f"Error : {e}")
+    finally:
+        cursor.close()
+        conexao_banco.close()
+
 
 
 def estabelecer_conexao():
