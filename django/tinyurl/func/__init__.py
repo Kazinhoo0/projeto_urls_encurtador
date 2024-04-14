@@ -1,69 +1,78 @@
 import pyshorteners
-from banco_dados import db
 import mysql.connector
+from cabecalho import cabecalho
+from time import sleep
+
 
 def encurtador(url):
-
-    shortener=pyshorteners.Shortener()
-
+    conexao_banco, cursor = estabelecer_conexao()
+    shortener= pyshorteners.Shortener()
     shorted_link=shortener.tinyurl.short(url)
 
     print(f"A sua url encurtada é : {shorted_link} ")
+    try:  
+        comando = ("""INSERT INTO urls (urlencur, urlnormal)
+                   VALUES (%s, %s)""")
+        dados = (shorted_link,url)
+        cursor.execute(comando,dados)
+        conexao_banco.commit()
+    except mysql.connector.Error as e:
+        print(f"ERRO {e}")
+    finally:
+        conexao_banco.close()
+        cursor.close()
+
 
 
 def createtable():
-    conexao_banco,cursor = estabelecer_conexao()
+    conexao_banco, cursor = estabelecer_conexao()
     try:
         comando = ("""CREATE TABLE urls (
-                id auto_increment, not_null
-                urlencur varchar(50)
-                urlnormal varchar(200) 
-                   """)
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    urlencur VARCHAR(255) NOT NULL,
+                    urlnormal VARCHAR(255)
+                    )""")
         cursor.execute(comando)
-        cursor.fetchall()
-    except (TypeError) as e:
+        conexao_banco.commit()
+    except mysql.connector.Error as e:
         print(f"Erro: {e}")
-    except (mysql.connector.Error) as e:
-        print(f"Error : {e}")
     finally:
         cursor.close()
         conexao_banco.close()
-        return print("Tabela criada com Sucesso!")
+        print("Tabela criada com sucesso!")
+
         
 
 
-def viewurls(comando):
+def viewurls():
     try:
-        conexao_banco,cursor = estabelecer_conexao
-        createtable()
-
-        comando = ("SELECT * FROM urlencur")
+        conexao_banco, cursor = estabelecer_conexao()
+        comando = ("SELECT urlencur from urls")
         cursor.execute(comando)
         resultado = cursor.fetchall()
         for i in resultado:
                 url = i
-                print(f"Os seus urls encurtados são: 
-                ulrs: {url}")
+                print(f"Os seus urls encurtados são: ulrs: {url}")
     except (mysql.connector.Error) as e:
         print(f"Error : {e}")
     finally:
         cursor.close()
         conexao_banco.close()
     
+    
 
 
-def viewurlnrm(comando):
+def viewurlnrm():
     try:
-        conexao_banco,cursor = estabelecer_conexao
-        createtable()
+        conexao_banco,cursor = estabelecer_conexao()
 
-        comando = ("SELECT * FROM urlnormal")
+        comando = ("SELECT urlnormal FROM urls")
         cursor.execute(comando)
         resultado = cursor.fetchall()
         for i in resultado:
-                url = i
-                print(f"Os seus urls encurtados são: 
-                ulrs: {url}")
+            url = i
+        print(f"Os seus urls encurtados são: ulrs: {url}")
+    
     except (mysql.connector.Error) as e:
         print(f"Error : {e}")
     finally:
@@ -87,3 +96,9 @@ def estabelecer_conexao():
     cursor = conexao_banco.cursor()
 
     return conexao_banco,cursor
+
+
+def fimprograma():
+    print("fechando a aplicacão...")
+    sleep(2.0)
+    cabecalho("FIM DO PROGRAMA")
