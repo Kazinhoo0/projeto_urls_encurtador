@@ -2,6 +2,7 @@ import pyshorteners
 import mysql.connector
 from cabecalho import cabecalho
 from time import sleep
+from banco_dados import estabelecer_conexao
 
 
 def encurtador(url):
@@ -9,7 +10,7 @@ def encurtador(url):
     shortener= pyshorteners.Shortener()
     shorted_link=shortener.tinyurl.short(url)
 
-    print(f"A sua url encurtada é : {shorted_link} ")
+    print(f"\033[34mA sua url encurtada é : {shorted_link}\033[m ")
     try:  
         comando = ("""INSERT INTO urls (urlencur, urlnormal)
                    VALUES (%s, %s)""")
@@ -17,11 +18,10 @@ def encurtador(url):
         cursor.execute(comando,dados)
         conexao_banco.commit()
     except mysql.connector.Error as e:
-        print(f"ERRO {e}")
+        print(f"\033[31mERRO {e}\033[m")
     finally:
         conexao_banco.close()
         cursor.close()
-
 
 
 def createtable():
@@ -42,8 +42,6 @@ def createtable():
         print("Tabela criada com sucesso!")
 
         
-
-
 def viewurls():
     try:
         conexao_banco, cursor = estabelecer_conexao()
@@ -52,7 +50,7 @@ def viewurls():
         resultado = cursor.fetchall()
         for i in resultado:
                 url = i
-                print(f"Os seus urls encurtados são: ulrs: {url}")
+                print(f"\033[34mOs seus urls encurtados são: ulrs: {url}\033[m")
     except (mysql.connector.Error) as e:
         print(f"Error : {e}")
     finally:
@@ -60,8 +58,6 @@ def viewurls():
         conexao_banco.close()
     
     
-
-
 def viewurlnrm():
     try:
         conexao_banco,cursor = estabelecer_conexao()
@@ -71,7 +67,7 @@ def viewurlnrm():
         resultado = cursor.fetchall()
         for i in resultado:
             url = i
-        print(f"Os seus urls encurtados são: ulrs: {url}")
+        print(f"\033[34mOs seus urls encurtados são: ulrs: {url}\033[m")
     
     except (mysql.connector.Error) as e:
         print(f"Error : {e}")
@@ -80,25 +76,7 @@ def viewurlnrm():
         conexao_banco.close()
 
 
-
-def estabelecer_conexao():
-    try:
-        conexao_banco = mysql.connector.connect(
-            host="localhost",
-            user= "root",
-            password="",
-            database="horastrabalhadas"
-        )
-        
-    except (mysql.connector.Error) as e:
-        print(f"Erro {e} // ao tentar estabelecer a conexão")
-
-    cursor = conexao_banco.cursor()
-
-    return conexao_banco,cursor
-
-
 def fimprograma():
-    print("fechando a aplicacão...")
+    print("\033[31mfechando a aplicacão...\033[m")
     sleep(2.0)
-    cabecalho("FIM DO PROGRAMA")
+    cabecalho("\033[35mFIM DO PROGRAMA\033[m")

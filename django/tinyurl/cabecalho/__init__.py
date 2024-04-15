@@ -12,10 +12,10 @@ def cabecalho(txt):
     
 def opcoes():
  
-    print("""Programa encurtador de Urls, abaixo você terá algumas opcoes basta escolher.\n
+    print("""\033[34mPrograma encurtador de Urls, abaixo você terá algumas opcoes basta escolher.\n
           1 - Adicionar nova url
           2 - Ver urls encurtadas adicionadas
           3 - Ver urls não encurtadas adicionadas
           4 - SAIR
           5 - Criar tabela
-          """)
+          \033m""")
